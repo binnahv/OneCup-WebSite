@@ -1,0 +1,197 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Playfair Display", serif;
+}
+body{
+    background-image: url(Frame\ 1.png);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    align-items: center;
+}
+.fotoetexto{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #642616;
+}
+.botaoetexto{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #642616;
+
+}
+.botao1{
+    margin-top: 2%;
+    cursor: pointer;
+}
+.botao2{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 0.7%;
+}
+.logo{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+.foto1{
+    height: 150px;
+}
+.informacoes{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #642616;
+    font-size: 15px;
+    margin-top: 1%;
+}
+.inserirnome{
+    margin-top: 1%;
+}
+.inputpessoa{
+    margin-top: 1%;
+}
+.pessoas{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #642616;
+    display: flex;
+    margin-top: 1%;
+    font-family: "Playfair Display", serif;
+}
+.input{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    color: #642616;
+}
+input[type="date"],
+input[type="time"] {
+    color: #642616;
+    border: 2px solid #3B1711;
+    border-radius: 7px;
+    height: 30px;
+    width: 150px;
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+.data{
+    margin-bottom: 20px;
+}
+
+
+.botaofila{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    
+}
+.fila{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    color: #642616;
+    padding-top: 1%;
+}
+.posicao {
+    background-image: url(coffee\ shop\ 1.png);
+    height: 150px;
+    width: 250px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin: 0 auto; 
+
+    
+}
+.h3bemvindo{
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal; 
+}
+.historia{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    color: #642616;
+    font-size: 16px;
+    padding-top: 2%;
+    
+}
+.botoes{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin-top: 5%;
+}
+#sair{
+    width: 100px;
+    height: 50px;
+}
+#ok{
+    width: 100px;
+    height: 50px;
+    margin-right: 100px;
+}
+.logo2{
+    max-width: 100%;
+    height: auto;
+}
+h2{
+    font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+h4{
+    font-family: "Raleway", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal; 
+}
+
+button,a{
+    background-color: #3B1711;
+    color: white;
+    border-radius: 10px;
+    height: 50px;
+    width: 200px;
+    text-decoration: none;
+    border: none;
+    font-family: Arial, Helvetica, sans-serif
+}
+#caixa-texto{
+    height: 30px;
+    width: 300px;
+    font-family: Arial, Helvetica, sans-serif;
+    border:  2px solid #3B1711;
+    border-radius: 7px;
+}
+#check{
+    height: 30px;
+    width: 200px;
+}
+option{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #3B1711;
+    color: white;
+}
+select{
+    background-color: #3B1711;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+

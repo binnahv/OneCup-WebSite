@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Mesa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Playfair Display", serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: "Playfair Display", serif;
+            background-image: url('Frame 1.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        h2 {
+            font-family: "Playfair Display", serif;
+            color: #3B1711;
+        }
+
+        h4 {
+            font-family: "Raleway", sans-serif;
+            color: #3B1711;
+        }
+
+        h5 {
+            font-family: "Raleway", sans-serif;
+            color: #3B1711;
+        }
+
+        button,
+        a {
+            background-color: #3B1711;
+            color: white;
+            border-radius: 10px;
+            height: 50px;
+            width: 200px;
+            text-decoration: none;
+            border: none;
+            font-family: Arial, Helvetica, sans-serif;
+            display: inline-block;
+            line-height: 50px;
+        }
+
+        #caixa-texto {
+            height: 30px;
+            width: 300px;
+            font-family: Arial, Helvetica, sans-serif;
+            border: 2px solid #3B1711;
+            border-radius: 7px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .slogan {
+            font-family: "Raleway", sans-serif;
+            color: #3B1711;
+        }
+
+        .reservation-card {
+            font-family: "Raleway", sans-serif;
+            color: #fff;
+            text-align: left;
+        }
+
+        .header {
+            color: #3B1711;
+        }
+
+        #caixa-texto {
+            color: #3B1711;
+        }
+
+        .reservation-card {
+            background-image: url('coffee shop 1.png');
+            background-color: #E3DBD7;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        .cancel {
+            background-color: #fff;
+            color: #3B1711;
+        }
+
+        .edit {
+            background-color: #fff;
+            color: #3B1711;
+        }
+
+        #numpessoas {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="logo">
+            <div class="foto">
+                <img src="coffee shop (1).png" alt="" class="foto1">
+            </div>
+        </div>
+        <div class="informacoes">
+            <h2>Reservar Mesa</h2>
+            <br>
+            <h4>Para confirmar sua reserva, por favor, <br> insira seu e-mail ou número de telefone</h4>
+            <br>
+            <form id="reservaForm">
+                <input type="email" name="email" id="caixa-texto" required>
+                <br>
+                <h4>Insira seu nome</h4>
+                <input type="text" name="nome" id="caixa-texto" required>
+                <br>
+                <div class="input-group">
+                    <h4 id="numpessoas">Número de Pessoas</h4>
+                    <select name="numeroPessoas" class="inputpessoa">
+                        <option value="1">1 pessoa</option>
+                        <option value="2">2 pessoas</option>
+                        <option value="3">3 pessoas</option>
+                        <option value="4">4 pessoas</option>
+                        <option value="5">5 pessoas</option>
+                        <option value="6">6 pessoas</option>
+                        <option value="7">7 pessoas</option>
+                        <option value="8">8 pessoas</option>
+                        <option value="9">9 pessoas</option>
+                        <option value="10">10 pessoas</option>
+                    </select>
+                </div>
+                <br>
+                <div class="input">
+                    <h4 class="data">Data</h4>
+                    
+                    <input type="date" name="data" id="data">
+                    <input type="time" name="hora" id="hora">
+                </div>
+                <br>
+                <div class="botaofila">
+                    <button type="submit">Reservar Mesa</button>
+                </div>
+            </form>
+            <br>
+            <div class="informacoes">
+                <h5>Ao clicar em continuar, você concorda com os nossos <br> Termos de Serviço e Política de Privacidade</h5>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('reservaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.querySelector('input[name="email"]').value;
+            const nome = document.querySelector('input[name="nome"]').value;
+            const numeroPessoas = document.querySelector('select[name="numeroPessoas"]').value;
+            const data = document.querySelector('input[name="data"]').value;
+            const hora = document.querySelector('input[name="hora"]').value;
+
+            const reserva = { email, nome, numeroPessoas, data, hora };
+
+            // Salva a reserva no localStorage
+            localStorage.setItem('reserva', JSON.stringify(reserva));
+
+            // Redireciona para a página de confirmação
+            window.location.href = '../Funcionario Mario Mesa Corrigido/Reservas.html';
+        });
+    </script>
+</body>
+
+</html>
