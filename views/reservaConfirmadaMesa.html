@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Confirmada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Playfair Display", serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('Frame 1.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .logo img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #3B1711;
+            margin-bottom: 20px;
+        }
+
+        .reservation-details {
+            margin: 20px 0;
+            text-align: left;
+            padding: 20px;
+            border: 2px solid #3B1711;
+            border-radius: 10px;
+        }
+
+        .reservation-details p {
+            margin: 10px 0;
+            color: #3B1711;
+            font-family: "Raleway", sans-serif;
+        }
+
+        .button {
+            background-color: #3B1711;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="coffee shop (1).png" alt="OneCup Logo">
+        </div>
+        <h2>Reserva Confirmada!</h2>
+        <div class="reservation-details">
+            <p id="nome"></p>
+            <p id="email"></p>
+            <p id="numeroPessoas"></p>
+            <p id="dataHora"></p>
+        </div>
+        <a href="/" class="button">Voltar ao Início</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reserva = JSON.parse(localStorage.getItem('reserva'));
+            if (reserva) {
+                document.getElementById('nome').textContent = `Nome: ${reserva.nome}`;
+                document.getElementById('email').textContent = `Email: ${reserva.email}`;
+                document.getElementById('numeroPessoas').textContent = `Número de pessoas: ${reserva.numeroPessoas}`;
+                document.getElementById('dataHora').textContent = `Data e hora: ${new Date(reserva.data + 'T' + reserva.hora).toLocaleString()}`;
+            }
+        });
+    </script>
+</body>
+</html>

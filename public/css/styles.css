@@ -1,0 +1,84 @@
+/* Variáveis globais */
+:root {
+    --primary-color: #3B1711;
+    --primary-hover: #642616;
+    --text-color: #642616;
+    --font-heading: "Playfair Display", serif;
+    --font-body: "Raleway", Arial, sans-serif;
+}
+
+/* Estilos globais */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: var(--font-heading);
+    background-image: url('../images/Fundo.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Classes utilitárias */
+.center-content {
+    text-align: center;
+    color: var(--text-color);
+}
+
+/* Botões */
+.btn-primary-custom {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white !important;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 200px;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 5px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--primary-hover);
+    cursor: pointer;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary-custom a {
+    color: var(--light-color);
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    font-size: 0.95rem;
+    font-family: var(--font-body);
+}
+
+/* Imagens */
+.logo {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Seções */
+.section-spacing {
+    margin: 30px 0;
+}
+
+/* Tipografia */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--text-color);
+}
+
+h4, h5 {
+    font-family: var(--font-body);
+    color: var(--text-color);
+}

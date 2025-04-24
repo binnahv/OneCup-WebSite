@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Mesa - One Cup</title>
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_brown.css">
+    <link rel="stylesheet" href="../public/css/styles.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+    
+
+
+    <style>
+        /* Estilos para campos do formulário */
+        .form-control {
+            border: 2px solid var(--primary-color);
+            border-radius: 7px;
+            color: var(--primary-color);
+            font-family: var(--font-body);
+        }
+
+        /* Estilos personalizados para o Flatpickr */
+        .flatpickr-calendar {
+            font-family: var(--font-body);
+        }
+
+        .flatpickr-day.selected, 
+        .flatpickr-day.selected:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .flatpickr-day.today {
+            border-color: var(--primary-color);
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(59, 23, 17, 0.1);
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month input.cur-year {
+            font-family: var(--font-body);
+            font-weight: 500;
+        }
+
+        .flatpickr-time input:hover,
+        .flatpickr-time .flatpickr-am-pm:hover,
+        .flatpickr-time input:focus,
+        .flatpickr-time .flatpickr-am-pm:focus {
+            background: rgba(59, 23, 17, 0.1);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 0 0.25rem rgba(100, 38, 22, 0.25);
+        }
+
+        .form-select {
+            border: 2px solid var(--primary-color);
+            border-radius: 7px;
+            color: var(--primary-color);
+            font-family: var(--font-body);
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 0 0.25rem rgba(100, 38, 22, 0.25);
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="text-center mb-4">
+                    <img src="../public/images/Logo.png" alt="One Cup Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                    <h1 class="display-5 mb-3">Reservar Mesa</h1>
+                    <p class="lead text-muted">Preencha os campos abaixo para fazer sua reserva</p>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form id="reservaForm">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-mail ou Telefone</label>
+                                <input type="text" class="form-control" id="email" name="email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="telefone" name="telefone" required placeholder="(00) 00000-0000" maxlength="15">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="numeroPessoas" class="form-label">Número de Pessoas</label>
+                                <select class="form-select" id="numeroPessoas" name="numeroPessoas" required>
+                                    <option value="1">1 pessoa</option>
+                                    <option value="2">2 pessoas</option>
+                                    <option value="3">3 pessoas</option>
+                                    <option value="4">4 pessoas</option>
+                                    <option value="5">5 pessoas</option>
+                                    <option value="6">6 pessoas</option>
+                                    <option value="7">7 pessoas</option>
+                                    <option value="8">8 pessoas</option>
+                                    <option value="9">9 pessoas</option>
+                                    <option value="10">10 pessoas</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="dataHora" class="form-label">Data e Hora</label>
+                                <input type="text" class="form-control" id="dataHora" name="dataHora" required placeholder="Selecione a data e hora" readonly>
+                            </div>
+                            <button type="submit" class="btn-primary-custom w-100">Fazer Reserva</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+
+    <script>
+        // Aguarda o documento estar pronto
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formatação do campo de telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            // Remove tudo que não é número
+            let valor = this.value.replace(/\D/g, '');
+            
+            // Limita a 11 dígitos
+            valor = valor.substring(0, 11);
+            
+            // Formata o número
+            if (valor.length > 0) {
+                // Adiciona parênteses no DDD
+                valor = '(' + valor;
+                if (valor.length > 3) {
+                    valor = valor.substring(0, 3) + ') ' + valor.substring(3);
+                }
+                // Adiciona hífen antes dos 4 últimos dígitos
+                if (valor.length > 9) {
+                    valor = valor.substring(0, 10) + '-' + valor.substring(10);
+                }
+            }
+            
+            this.value = valor;
+        });
+
+            // Configuração do Flatpickr para data e hora
+            flatpickr("#dataHora", {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i",
+                locale: "pt",
+                minDate: "today",
+                time_24hr: true,
+                minuteIncrement: 30,
+                minTime: "10:00",
+                maxTime: "22:00",
+                defaultHour: 12,
+                disableMobile: "true",
+                position: "above",
+                static: true,
+                animate: true,
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Atualiza o valor do campo com a data formatada
+                    instance.input.value = dateStr;
+                }
+            });
+        });
+
+        document.getElementById('reservaForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const email = document.querySelector('input[name="email"]').value;
+            const nome = document.querySelector('input[name="nome"]').value;
+            const telefone = document.querySelector('input[name="telefone"]').value;
+            const numeroPessoas = document.querySelector('select[name="numeroPessoas"]').value;
+            const dataHora = document.querySelector('input[name="dataHora"]').value;
+
+            // Converte a data/hora do formato brasileiro para ISO
+            const [data, hora] = dataHora.split(' ');
+            const [dia, mes, ano] = data.split('/');
+            const dataISO = `${ano}-${mes}-${dia}T${hora}:00`;
+
+            const reserva = { 
+                email, 
+                name: nome,
+                phone: telefone,
+                guests: parseInt(numeroPessoas),
+                datetime: dataISO,
+                status: 'confirmed'
+            };
+
+            try {
+                const response = await fetch('/api/reservations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reserva)
+                });
+
+                if (response.ok) {
+                    // Salva a reserva no localStorage para exibir na página de confirmação
+                    localStorage.setItem('reserva', JSON.stringify({
+                        ...reserva,
+                        data,
+                        numeroPessoas
+                    }));
+                    
+                    // Redireciona para a página de confirmação
+                    window.location.href = '/reserva-confirmada.html';
+                } else {
+                    alert('Erro ao fazer a reserva. Por favor, tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao fazer a reserva. Por favor, tente novamente.');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila de Espera - One Cup</title>
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../public/css/styles.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    <style>
+        .form-control {
+            border: 2px solid var(--primary-color);
+            border-radius: 7px;
+            color: var(--primary-color);
+            font-family: var(--font-body);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 0 0.25rem rgba(100, 38, 22, 0.25);
+        }
+
+        .form-select {
+            border: 2px solid var(--primary-color);
+            border-radius: 7px;
+            color: var(--primary-color);
+            font-family: var(--font-body);
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 0 0.25rem rgba(100, 38, 22, 0.25);
+        }
+
+        .form-check-input {
+            border: 2px solid var(--primary-color);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .form-check-input:focus {
+            border-color: var(--primary-hover);
+            box-shadow: 0 0 0 0.25rem rgba(100, 38, 22, 0.25);
+        }
+
+
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="text-center mb-4">
+                    <img src="../public/images/Logo.png" alt="One Cup Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                    <h1 class="display-5 mb-3">Fila de Espera</h1>
+                    <p class="lead text-muted">Para confirmar sua reserva, por favor, preencha os campos abaixo</p>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <form id="filaForm">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-mail ou Telefone</label>
+                                <input type="text" class="form-control" id="caixa-texto-email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="caixa-texto-nome" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pessoas" class="form-label">Número de Pessoas</label>
+                                <select class="form-select" id="select-pessoas" required>
+                                    <option value="1">1 pessoa</option>
+                                    <option value="2">2 pessoas</option>
+                                    <option value="3">3 pessoas</option>
+                                    <option value="4">4 pessoas</option>
+                                    <option value="5">5 pessoas</option>
+                                    <option value="6">6 pessoas</option>
+                                    <option value="7">7 pessoas</option>
+                                    <option value="8">8 pessoas</option>
+                                    <option value="9">9 pessoas</option>
+                                    <option value="10">10 pessoas</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check-atendimento-preferencial">
+                                    <label class="form-check-label" for="check-atendimento-preferencial">
+                                        Atendimento Preferencial<br>
+                                        <small class="text-muted">(Maiores de 60 anos, pessoas com deficiência, gestantes e pessoas com crianças de colo)</small>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary-custom w-100" id="btn-entrar-fila">Entrar na Fila</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filaForm = document.getElementById('filaForm');
+            
+            // Carregar dados da fila do localStorage
+            function carregarFila() {
+                const fila = localStorage.getItem('fila');
+                return fila ? JSON.parse(fila) : [];
+            }
+
+            // Salvar fila no localStorage
+            function salvarFila(fila) {
+                localStorage.setItem('fila', JSON.stringify(fila));
+            }
+
+            // Calcular posição na fila
+            function calcularPosicaoFila(atendimentoPreferencial) {
+                const fila = carregarFila();
+                if (atendimentoPreferencial) {
+                    // Encontrar última posição preferencial
+                    const ultimaPosicaoPreferencial = fila.reduce((pos, cliente) => {
+                        return cliente.atendimentoPreferencial ? Math.max(pos, cliente.posicao) : pos;
+                    }, 0);
+                    return ultimaPosicaoPreferencial + 1;
+                } else {
+                    // Encontrar última posição normal
+                    return fila.length > 0 ? Math.max(...fila.map(c => c.posicao)) + 1 : 1;
+                }
+            }
+
+            // Reorganizar fila quando cliente preferencial entra
+            function reorganizarFila(novoCliente) {
+                let fila = carregarFila();
+                
+                if (novoCliente.atendimentoPreferencial) {
+                    // Inserir cliente preferencial no início da fila
+                    const clientesPreferenciais = fila.filter(c => c.atendimentoPreferencial);
+                    const clientesNormais = fila.filter(c => !c.atendimentoPreferencial);
+                    
+                    // Reajustar posições
+                    clientesPreferenciais.push(novoCliente);
+                    clientesPreferenciais.sort((a, b) => a.posicao - b.posicao);
+                    
+                    // Atualizar posições dos clientes normais
+                    clientesNormais.forEach(cliente => {
+                        cliente.posicao = Math.max(...clientesPreferenciais.map(c => c.posicao)) + 1;
+                    });
+                    
+                    fila = [...clientesPreferenciais, ...clientesNormais];
+                } else {
+                    fila.push(novoCliente);
+                }
+                
+                return fila;
+            }
+
+            filaForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('caixa-texto-email').value;
+                const nome = document.getElementById('caixa-texto-nome').value;
+                const numPessoas = document.getElementById('select-pessoas').value;
+                const atendimentoPreferencial = document.getElementById('check-atendimento-preferencial').checked;
+
+                // Calcular posição na fila
+                const posicao = calcularPosicaoFila(atendimentoPreferencial);
+
+                // Criar novo cliente
+                const novoCliente = {
+                    id: Date.now(),
+                    email,
+                    nome,
+                    numPessoas,
+                    atendimentoPreferencial,
+                    posicao,
+                    dataEntrada: new Date().toISOString()
+                };
+
+                // Atualizar fila
+                const filaAtualizada = reorganizarFila(novoCliente);
+                salvarFila(filaAtualizada);
+
+                // Salvar cliente atual para exibição na página de confirmação
+                localStorage.setItem('clienteAtual', JSON.stringify(novoCliente));
+
+                // Redirecionar para a página de confirmação
+                window.location.href = 'filaConfirmada.html';
+            });
+        });
+    </script>
+
+</body>
+
+</html>

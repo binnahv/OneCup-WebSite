@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila Confirmada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Raleway', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('../public/images/Fundo.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 90%;
+            width: 600px;
+            margin-top: 130px;
+        }
+
+        .logo .foto {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .logo .foto img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .fila {
+            margin-bottom: 20px;
+        }
+
+        .fila h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #3e1e0a;
+        }
+
+        .fila h4 {
+            font-size: 18px;
+            color: #3e1e0a;
+        }
+
+        .posicao {
+            background-color: #3e1e0a;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .posicao .conteudo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            margin: 0;
+        }
+
+        .historia {
+            text-align: left;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #3e1e0a;
+        }
+
+        .historia h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+        }
+
+        .historia h3,
+        .historia h2,
+        .historia h4 {
+            font-size: 16px;
+        }
+
+        .botoes {
+            text-align: center;
+        }
+
+        .botoes button {
+            background-color: #3e1e0a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .botoes button a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .botoes button:hover {
+            background-color: #3e1e0a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="text-center mb-4">
+                    <img src="../public/images/Logo.png" alt="One Cup Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                    <h1 class="display-5 mb-3">Você está na fila!</h1>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <h4 class="card-title">Sua posição</h4>
+                            <h1 class="display-1" id="posicaoFila">-</h1>
+                            <div id="clienteInfo" class="text-start mt-4">
+                                <p class="mb-2"><strong>Nome:</strong> <span id="nomeCliente">-</span></p>
+                                <p class="mb-2"><strong>Número de pessoas:</strong> <span id="numeroPessoas">-</span></p>
+                                <p class="mb-2"><strong>Tipo de atendimento:</strong> <span id="tipoAtendimento">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="card-title mb-3">Enquanto você espera...</h4>
+                        <div class="mb-3">
+                            <h5 class="text-primary">Nossa História</h5>
+                            <p>Desde 2010, servimos café artesanal de grãos selecionados de fazendas sustentáveis.</p>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="text-primary">Recomendações</h5>
+                            <p>Experimente nosso Cappuccino Cremoso e nossos croissants fresquinhos.</p>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="text-primary">Wi-Fi Gratuito</h5>
+                            <p>Conecte-se à rede "OneCup-WiFi" com a senha "coffee2010".</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button class="btn-primary-custom" onclick="window.location.href='index.html'">Ok</button>
+                    <button class="btn-primary-custom" onclick="sairDaFila()">Sair da fila</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Carregar informações do cliente atual
+            const clienteAtual = JSON.parse(localStorage.getItem('clienteAtual'));
+            if (clienteAtual) {
+                document.getElementById('posicaoFila').textContent = clienteAtual.posicao;
+                document.getElementById('nomeCliente').textContent = clienteAtual.nome;
+                document.getElementById('numeroPessoas').textContent = `${clienteAtual.numPessoas} pessoa${clienteAtual.numPessoas > 1 ? 's' : ''}`;
+                document.getElementById('tipoAtendimento').textContent = clienteAtual.atendimentoPreferencial ? 'Preferencial' : 'Normal';
+            }
+        });
+
+        function sairDaFila() {
+            const clienteAtual = JSON.parse(localStorage.getItem('clienteAtual'));
+            if (clienteAtual) {
+                // Remover cliente da fila
+                let fila = JSON.parse(localStorage.getItem('fila')) || [];
+                fila = fila.filter(cliente => cliente.id !== clienteAtual.id);
+                
+                // Reorganizar posições
+                fila.forEach((cliente, index) => {
+                    cliente.posicao = index + 1;
+                });
+                
+                localStorage.setItem('fila', JSON.stringify(fila));
+                localStorage.removeItem('clienteAtual');
+            }
+            window.location.href = 'index.html';
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Função para extrair o ID da reserva da URL
+            function extrairIdReservaDaURL() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return parseInt(urlParams.get('id'));
+            }
+
+            // Função para carregar o ID da reserva da URL
+            function carregarIdReserva() {
+                const idReservaSpan = document.getElementById('idReserva');
+                const idReserva = extrairIdReservaDaURL();
+                if (!isNaN(idReserva)) {
+                    idReservaSpan.textContent = idReserva;
+                } else {
+                    idReservaSpan.textContent = '-';
+                }
+            }
+
+            // Carregar o ID da reserva ao carregar a página
+            carregarIdReserva();
+        });
+    </script>
+</body>
+
+</html>
