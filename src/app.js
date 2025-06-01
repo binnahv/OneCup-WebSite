@@ -42,6 +42,11 @@ const queueRoutes = require('./routes/queue');
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/queue', queueRoutes);
 
+// Redirect root to index.html
+app.get('/', (req, res) => {
+  res.redirect('/index.html');
+});
+
 // Serve static HTML files (generic handler for any .html in /views)
 app.get('/*.html', (req, res) => {
     const fileName = req.path.substring(1); // remove leading '/'

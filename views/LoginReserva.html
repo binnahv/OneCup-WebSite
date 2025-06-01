@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Reserva - One Cup</title>
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_brown.css">
+    <link rel="stylesheet" href="../public/css/styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Raleway:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('../public/images/Fundo.png');
+            background-size: cover;
+            background-position: center;
+        }
+        body, h1, h2, h3, h4, h5, h6, .card-title, .lead, p, span, label, .text-dark {
+            color: #3e1e0a !important;
+        }
+        button, .btn, .btn-primary-custom {
+            color: #fff !important;
+        }
+        .btn-wine {
+            background-color: #8B0000 !important;
+            border-color: #8B0000 !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="text-center mb-4">
+                    <img src="../public/images/Logo.png" alt="One Cup Logo" class="img-fluid mb-3" style="max-width: 150px;">
+                    <h1 class="display-5 mb-3">Editar Reserva</h1>
+                </div>
+                <!-- Seção de login -->
+                <div id="loginSection">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="emailLogin" class="form-label">E-mail</label>
+                                    <input type="email" class="form-control" id="emailLogin" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="senhaLogin" class="form-label">Senha</label>
+                                    <input type="password" class="form-control" id="senhaLogin" required minlength="6">
+                                </div>
+                                <button type="submit" class="btn-primary-custom w-100">Entrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Detalhes da reserva -->
+                <div id="reservationSection" style="display:none;" class="mt-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <h4>Detalhes da Reserva</h4>
+                            <p><strong>Nome:</strong> <span id="nomeRes">-</span></p>
+                            <p><strong>Data e Hora:</strong> <span id="dataHoraRes">-</span></p>
+                            <p><strong>Número de Pessoas:</strong> <span id="guestsRes">-</span></p>
+                            <p><strong>Status:</strong> <span id="statusRes">-</span></p>
+                            <div class="d-grid gap-2">
+                                <button id="editBtn" class="btn-primary-custom w-100">Editar Reserva</button>
+                                <button id="saveBtn" class="btn-primary-custom w-100 mt-2">Salvar Reserva</button>
+                                <button id="cancelBtn" class="btn btn-wine w-100">Cancelar Reserva</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal de Edição -->
+                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Editar Reserva</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label for="modalDataHora" class="form-label">Data e Hora</label>
+                          <input type="text" class="form-control" id="modalDataHora" readonly>
+                        </div>
+                        <div class="mb-3">
+                          <label for="modalGuests" class="form-label">Número de Pessoas</label>
+                          <input type="number" class="form-control" id="modalGuests" min="1" required>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="modalSaveBtn" class="btn btn-primary">Salvar Alterações</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const loginSection = document.getElementById('loginSection');
+            const reservationSection = document.getElementById('reservationSection');
+            const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            const modalDataHora = document.getElementById('modalDataHora');
+            const modalGuests = document.getElementById('modalGuests');
+            const btnEdit = document.getElementById('editBtn');
+            const btnSave = document.getElementById('saveBtn');
+            const btnCancel = document.getElementById('cancelBtn');
+            const btnModalSave = document.getElementById('modalSaveBtn');
+            let currentRes = null;
+            const baseUrl = 'http://localhost:3000/api/reservations';
+
+            // Init flatpickr and keep instance to set date later
+            const modalFP = flatpickr(modalDataHora, {
+                enableTime: true,
+                dateFormat: 'd/m/Y H:i',
+                locale: 'pt',
+                minDate: 'today',
+                time_24hr: true
+            });
+
+            loginForm.addEventListener('submit', async e => {
+                e.preventDefault();
+                try {
+                    const resp = await fetch(`${baseUrl}/login`, {
+                        method: 'POST',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({
+                            email: document.getElementById('emailLogin').value,
+                            password: document.getElementById('senhaLogin').value
+                        })
+                    });
+                    if (!resp.ok) {
+                        const err = await resp.json();
+                        alert('Erro: ' + (err.error || resp.statusText));
+                        return;
+                    }
+                    currentRes = await resp.json();
+                    loginSection.style.display = 'none';
+                    reservationSection.style.display = 'block';
+                    setPreview();
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro de conexão');
+                }
+            });
+
+            btnEdit.addEventListener('click', () => {
+                modalGuests.value = currentRes.guests;
+                // Parse stored UTC date into local datetime
+                const [year, month, day] = currentRes.date.split('T')[0].split('-');
+                const [hour, minute] = currentRes.time.split(':');
+                const dt = new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+                modalFP.setDate(dt, true);
+                editModal.show();
+            });
+
+            btnModalSave.addEventListener('click', async () => {
+                const [d, t] = modalDataHora.value.split(' ');
+                const [dia, mes, ano] = d.split('/');
+                const date = new Date(`${ano}-${mes}-${dia}T00:00:00.000Z`).toISOString();
+                const guests = Number(modalGuests.value);
+                try {
+                    const resp = await fetch(`${baseUrl}/${currentRes._id}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({date, time: t, guests})
+                    });
+                    if (resp.ok) {
+                        currentRes = await resp.json();
+                        setPreview();
+                        editModal.hide();
+                        window.location.href = 'index.html';
+                    } else {
+                        const err = await resp.json();
+                        alert('Erro: ' + (err.error || resp.statusText));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro de conexão');
+                }
+            });
+
+            btnSave.addEventListener('click', async () => {
+                if (!currentRes) return;
+                try {
+                    const resp = await fetch(`${baseUrl}/${currentRes._id}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({status: 'confirmed'})
+                    });
+                    if (resp.ok) {
+                        currentRes = await resp.json();
+                        document.getElementById('statusRes').textContent = currentRes.status;
+                        alert('Reserva confirmada');
+                    } else {
+                        const err = await resp.json();
+                        alert('Erro: ' + (err.error || resp.statusText));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro de conexão');
+                }
+            });
+
+            btnCancel.addEventListener('click', async () => {
+                if (!currentRes || !confirm('Deseja cancelar a reserva?')) return;
+                try {
+                    const resp = await fetch(`${baseUrl}/${currentRes._id}`, {method: 'DELETE'});
+                    if (resp.ok) window.location.href = 'index.html';
+                    else {
+                        const err = await resp.json();
+                        alert('Erro: ' + (err.error || resp.statusText));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro de conexão');
+                }
+            });
+
+            function setPreview() {
+                document.getElementById('nomeRes').textContent = currentRes.name;
+                // Format date to avoid timezone shift
+                const [year, month, day] = currentRes.date.split('T')[0].split('-');
+                document.getElementById('dataHoraRes').textContent = `${day}/${month}/${year} ${currentRes.time}`;
+                document.getElementById('guestsRes').textContent = currentRes.guests;
+                document.getElementById('statusRes').textContent = currentRes.status;
+            }
+        });
+    </script>
+</body>
+</html>

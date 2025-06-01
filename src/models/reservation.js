@@ -13,6 +13,11 @@ const reservationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    // Armazenar senha para autenticação futura
+    password: {
+        type: String,
+        required: true
+    },
     date: {
         type: Date,
         required: true

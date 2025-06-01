@@ -14,4 +14,7 @@ router.put('/:id', reservationController.updateReservation);
 // Delete a reservation
 router.delete('/:id', reservationController.deleteReservation);
 
+// Login para editar/cancelar reserva
+router.post('/login', reservationController.loginReservation);
+
 module.exports = router;

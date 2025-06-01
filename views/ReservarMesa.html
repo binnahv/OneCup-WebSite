@@ -97,8 +97,8 @@
                     <div class="card-body p-4">
                         <form id="reservaForm">
                             <div class="mb-3">
-                                <label for="email" class="form-label">E-mail ou Telefone</label>
-                                <input type="email" class="form-control" id="email" name="email" required pattern=".+@.+\..+" title="Digite um email válido: deve conter @ e .">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" required pattern=".+@.+\..+" title="Informe um email válido com @ e .">
                             </div>
 
                             <div class="mb-3">
@@ -109,6 +109,11 @@
                             <div class="mb-3">
                                 <label for="telefone" class="form-label">Telefone</label>
                                 <input type="tel" class="form-control" id="telefone" name="telefone" required placeholder="(00) 00000-0000" maxlength="15">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="senha" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="senha" name="senha" required minlength="6" title="Mínimo 6 caracteres">
                             </div>
 
                             <div class="mb-3">
@@ -206,6 +211,7 @@
             const telefone = document.getElementById('telefone').value;
             const numeroPessoas = document.querySelector('select[name="numeroPessoas"]').value;
             const dataHora = document.querySelector('input[name="dataHora"]').value;
+            const senha = document.getElementById('senha').value;
 
             // Validação robusta do campo dataHora
             if (!dataHora || !dataHora.includes(' ')) {
@@ -234,6 +240,7 @@
                 guests: parseInt(numeroPessoas, 10),
                 date: dateISO,
                 time: horaMinuto,
+                password: senha,
                 status: 'pending' // ou 'confirmed' se preferir
             };
 
