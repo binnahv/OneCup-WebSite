@@ -95,13 +95,8 @@
 
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="caixa-texto-nome" required>
+                                <input type="text" class="form-control" id="caixa-texto-nome" required pattern="[A-Za-zÀ-ÖØ-öø-ÿ ]+" title="Use apenas letras e espaços">
                             </div>
-                            <div class="mb-3">
-                                <label for="telefone" class="form-label">Telefone</label>
-                                <input type="tel" class="form-control" id="caixa-texto-telefone" required>
-                            </div>
-
                             <div class="mb-3">
                                 <label for="pessoas" class="form-label">Número de Pessoas</label>
                                 <select class="form-select" id="select-pessoas" required>
@@ -140,6 +135,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             const filaForm = document.getElementById('filaForm');
             
+            // Impede números no campo Nome
+            document.getElementById('caixa-texto-nome').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ ]/g, '');
+            });
+
             // Carregar dados da fila do localStorage
             function carregarFila() {
                 const fila = localStorage.getItem('fila');
@@ -197,7 +197,6 @@
                 
                 const email = document.getElementById('caixa-texto-email').value;
                 const nome = document.getElementById('caixa-texto-nome').value;
-                const telefone = document.getElementById('caixa-texto-telefone').value;
                 const numPessoas = document.getElementById('select-pessoas').value;
                 const atendimentoPreferencial = document.getElementById('check-atendimento-preferencial').checked;
 
@@ -205,7 +204,7 @@
                 const dadosFila = {
                     name: nome,
                     email: email,
-                    phone: telefone,
+                    phone: email,
                     guests: parseInt(numPessoas, 10),
                     status: 'waiting' // status inicial
                 };
