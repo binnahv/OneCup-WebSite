@@ -6,6 +6,10 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Habilita CORS para qualquer origem (inclusive Live Server)
+const cors = require('cors');
+app.use(cors());
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -28,22 +32,14 @@ app.engine('html', require('ejs').renderFile);
 
 // Routes
 const reservationRoutes = require('./routes/reservations');
+const queueRoutes = require('./routes/queue');
 app.use('/api/reservations', reservationRoutes);
+app.use('/api/queue', queueRoutes);
 
-// Serve static HTML files
-const htmlFiles = [
-    '/',
-    '/ReservarMesa.html',
-    '/FilaEspera.html',
-    '/EditarReserva.html',
-    '/reserva-confirmada.html'
-];
-
-htmlFiles.forEach(file => {
-    app.get(file, (req, res) => {
-        const filePath = file === '/' ? 'index.html' : file.substring(1);
-        res.sendFile(path.join(__dirname, '../views', filePath));
-    });
+// Serve static HTML files (generic handler for any .html in /views)
+app.get('/*.html', (req, res) => {
+    const fileName = req.path.substring(1); // remove leading '/'
+    res.sendFile(path.join(__dirname, '../views', fileName));
 });
 
 // Error handler

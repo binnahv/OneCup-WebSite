@@ -178,7 +178,7 @@
                 locale: "pt",
                 minDate: "today",
                 time_24hr: true,
-                minuteIncrement: 30,
+
                 minTime: "10:00",
                 maxTime: "22:00",
                 defaultHour: 12,
@@ -198,26 +198,32 @@
 
             const email = document.querySelector('input[name="email"]').value;
             const nome = document.querySelector('input[name="nome"]').value;
-            const telefone = document.querySelector('input[name="telefone"]').value;
+            const telefone = document.getElementById('telefone').value;
             const numeroPessoas = document.querySelector('select[name="numeroPessoas"]').value;
             const dataHora = document.querySelector('input[name="dataHora"]').value;
 
-            // Converte a data/hora do formato brasileiro para ISO
+            // Converte a data/hora do formato brasileiro para os campos do backend
+            // Exemplo: dataHora = "01/06/2025 14:30"
             const [data, hora] = dataHora.split(' ');
             const [dia, mes, ano] = data.split('/');
-            const dataISO = `${ano}-${mes}-${dia}T${hora}:00`;
+            // Campo date: formato ISO completo (meia-noite UTC)
+            const dateISO = new Date(`${ano}-${mes}-${dia}T00:00:00.000Z`).toISOString();
+            // Campo time: string "HH:mm"
+            const horaMinuto = hora;
 
-            const reserva = { 
-                email, 
+            const reserva = {
                 name: nome,
+                email: email,
                 phone: telefone,
-                guests: parseInt(numeroPessoas),
-                datetime: dataISO,
-                status: 'confirmed'
+                guests: parseInt(numeroPessoas, 10),
+                date: dateISO,
+                time: horaMinuto,
+                status: 'pending' // ou 'confirmed' se preferir
             };
 
             try {
-                const response = await fetch('/api/reservations', {
+                const API_URL = 'http://localhost:3000/api/reservations';
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -226,17 +232,19 @@
                 });
 
                 if (response.ok) {
-                    // Salva a reserva no localStorage para exibir na página de confirmação
+                    // Salva a reserva no localStorage para exibir na página de confirmação (opcional)
                     localStorage.setItem('reserva', JSON.stringify({
                         ...reserva,
-                        data,
-                        numeroPessoas
+                        telefone: telefone,
+                        data: data,
+                        hora: horaMinuto,
+                        numeroPessoas: numeroPessoas
                     }));
-                    
                     // Redireciona para a página de confirmação
-                    window.location.href = '/reserva-confirmada.html';
+                    window.location.href = 'reserva-confirmada.html';
                 } else {
-                    alert('Erro ao fazer a reserva. Por favor, tente novamente.');
+                    const errorData = await response.json();
+                    alert('Erro ao fazer a reserva: ' + (errorData.error || response.statusText));
                 }
             } catch (error) {
                 console.error('Erro:', error);

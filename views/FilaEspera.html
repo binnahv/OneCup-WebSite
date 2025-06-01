@@ -97,6 +97,10 @@
                                 <label for="nome" class="form-label">Nome</label>
                                 <input type="text" class="form-control" id="caixa-texto-nome" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="caixa-texto-telefone" required>
+                            </div>
 
                             <div class="mb-3">
                                 <label for="pessoas" class="form-label">Número de Pessoas</label>
@@ -188,37 +192,54 @@
                 return fila;
             }
 
-            filaForm.addEventListener('submit', (e) => {
+            filaForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
                 const email = document.getElementById('caixa-texto-email').value;
                 const nome = document.getElementById('caixa-texto-nome').value;
+                const telefone = document.getElementById('caixa-texto-telefone').value;
                 const numPessoas = document.getElementById('select-pessoas').value;
                 const atendimentoPreferencial = document.getElementById('check-atendimento-preferencial').checked;
 
-                // Calcular posição na fila
-                const posicao = calcularPosicaoFila(atendimentoPreferencial);
-
-                // Criar novo cliente
-                const novoCliente = {
-                    id: Date.now(),
-                    email,
-                    nome,
-                    numPessoas,
-                    atendimentoPreferencial,
-                    posicao,
-                    dataEntrada: new Date().toISOString()
+                // Montar objeto para API
+                const dadosFila = {
+                    name: nome,
+                    email: email,
+                    phone: telefone,
+                    guests: parseInt(numPessoas, 10),
+                    status: 'waiting' // status inicial
                 };
 
-                // Atualizar fila
-                const filaAtualizada = reorganizarFila(novoCliente);
-                salvarFila(filaAtualizada);
+                try {
+                    const API_URL = 'http://localhost:3000/api/queue';
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dadosFila)
+                    });
 
-                // Salvar cliente atual para exibição na página de confirmação
-                localStorage.setItem('clienteAtual', JSON.stringify(novoCliente));
-
-                // Redirecionar para a página de confirmação
-                window.location.href = 'filaConfirmada.html';
+                    if (response.ok) {
+                        const filaCriada = await response.json();
+                        // Salvar cliente atual para confirmação
+                        localStorage.setItem('clienteAtual', JSON.stringify({
+                            _id: filaCriada._id,
+                            name: filaCriada.name,
+                            email: filaCriada.email,
+                            phone: filaCriada.phone,
+                            guests: filaCriada.guests,
+                            status: filaCriada.status,
+                            posicao: 1 // Pode ser atualizado se implementar lógica de posição
+                        }));
+                        window.location.href = 'filaConfirmada.html';
+                    } else {
+                        const errorData = await response.json();
+                        alert('Erro ao entrar na fila: ' + (errorData.error || response.statusText));
+                    }
+                } catch (err) {
+                    alert('Erro de conexão com o servidor.');
+                }
             });
         });
     </script>
