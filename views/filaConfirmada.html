@@ -58,15 +58,15 @@
                     <div class="card-body p-4">
                         <h4 class="card-title mb-3">Enquanto você espera...</h4>
                         <div class="mb-3">
-                            <h5 class="text-primary">Nossa História</h5>
+                            <h5>Nossa História</h5>
                             <p>Desde 2010, servimos café artesanal de grãos selecionados de fazendas sustentáveis.</p>
                         </div>
                         <div class="mb-3">
-                            <h5 class="text-primary">Recomendações</h5>
+                            <h5>Recomendações</h5>
                             <p>Experimente nosso Cappuccino Cremoso e nossos croissants fresquinhos.</p>
                         </div>
                         <div class="mb-3">
-                            <h5 class="text-primary">Wi-Fi Gratuito</h5>
+                            <h5>Wi-Fi Gratuito</h5>
                             <p>Conecte-se à rede "OneCup-WiFi" com a senha "coffee2010".</p>
                         </div>
                     </div>
@@ -95,9 +95,16 @@
             }
         });
 
-        function sairDaFila() {
+        async function sairDaFila() {
             const clienteAtual = JSON.parse(localStorage.getItem('clienteAtual'));
             if (clienteAtual) {
+                // Deletar cliente do banco de dados via API
+                const API_URL = 'http://localhost:3000/api/queue';
+                try {
+                    await fetch(`${API_URL}/${clienteAtual._id}`, { method: 'DELETE' });
+                } catch (err) {
+                    console.error('Erro ao remover do servidor', err);
+                }
                 // Remover cliente da fila
                 let fila = JSON.parse(localStorage.getItem('fila')) || [];
                 fila = fila.filter(cliente => cliente.id !== clienteAtual.id);
