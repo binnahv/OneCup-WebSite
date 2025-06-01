@@ -47,6 +47,7 @@
                             <h1 class="display-1" id="posicaoFila">-</h1>
                             <div id="clienteInfo" class="text-start mt-4">
                                 <p class="mb-2"><strong>Nome:</strong> <span id="nomeCliente">-</span></p>
+                                <p class="mb-2"><strong>Telefone:</strong> <span id="telefoneCliente">-</span></p>
                                 <p class="mb-2"><strong>Número de pessoas:</strong> <span id="numeroPessoas">-</span></p>
                                 <p class="mb-2"><strong>Tipo de atendimento:</strong> <span id="tipoAtendimento">-</span></p>
                             </div>
@@ -85,10 +86,13 @@
             // Carregar informações do cliente atual
             const clienteAtual = JSON.parse(localStorage.getItem('clienteAtual'));
             if (clienteAtual) {
-                document.getElementById('posicaoFila').textContent = clienteAtual.posicao;
-                document.getElementById('nomeCliente').textContent = clienteAtual.nome;
-                document.getElementById('numeroPessoas').textContent = `${clienteAtual.numPessoas} pessoa${clienteAtual.numPessoas > 1 ? 's' : ''}`;
+                document.getElementById('posicaoFila').textContent = clienteAtual.posicao || '-';
+                document.getElementById('nomeCliente').textContent = clienteAtual.name || clienteAtual.nome || '-';
+                document.getElementById('numeroPessoas').textContent = `${clienteAtual.guests || clienteAtual.numPessoas || '-'} pessoa${(clienteAtual.guests || clienteAtual.numPessoas) > 1 ? 's' : ''}`;
                 document.getElementById('tipoAtendimento').textContent = clienteAtual.atendimentoPreferencial ? 'Preferencial' : 'Normal';
+                // Exibir telefone se quiser:
+                let telefoneEl = document.getElementById('telefoneCliente');
+                if (telefoneEl) telefoneEl.textContent = clienteAtual.phone || '-';
             }
         });
 
@@ -109,27 +113,7 @@
             }
             window.location.href = 'index.html';
         }
-        document.addEventListener('DOMContentLoaded', () => {
-            // Função para extrair o ID da reserva da URL
-            function extrairIdReservaDaURL() {
-                const urlParams = new URLSearchParams(window.location.search);
-                return parseInt(urlParams.get('id'));
-            }
 
-            // Função para carregar o ID da reserva da URL
-            function carregarIdReserva() {
-                const idReservaSpan = document.getElementById('idReserva');
-                const idReserva = extrairIdReservaDaURL();
-                if (!isNaN(idReserva)) {
-                    idReservaSpan.textContent = idReserva;
-                } else {
-                    idReservaSpan.textContent = '-';
-                }
-            }
-
-            // Carregar o ID da reserva ao carregar a página
-            carregarIdReserva();
-        });
     </script>
 </body>
 
