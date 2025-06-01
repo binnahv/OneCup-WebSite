@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -10,6 +11,12 @@ const port = process.env.PORT || 3000;
 const cors = require('cors');
 app.use(cors());
 
+// Debug: mostrar valor da variável de ambiente
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
+if (!process.env.MONGODB_URI) {
+    console.error('ERRO: A variável de ambiente MONGODB_URI não está definida. Verifique seu arquivo .env e reinicie o servidor na pasta correta.');
+    process.exit(1);
+}
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,

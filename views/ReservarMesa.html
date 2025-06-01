@@ -202,10 +202,21 @@
             const numeroPessoas = document.querySelector('select[name="numeroPessoas"]').value;
             const dataHora = document.querySelector('input[name="dataHora"]').value;
 
-            // Converte a data/hora do formato brasileiro para os campos do backend
-            // Exemplo: dataHora = "01/06/2025 14:30"
+            // Validação robusta do campo dataHora
+            if (!dataHora || !dataHora.includes(' ')) {
+                alert('Por favor, selecione uma data e hora válidas.');
+                return;
+            }
             const [data, hora] = dataHora.split(' ');
+            if (!data || !hora || !data.includes('/')) {
+                alert('Por favor, selecione uma data e hora válidas.');
+                return;
+            }
             const [dia, mes, ano] = data.split('/');
+            if (!dia || !mes || !ano) {
+                alert('Por favor, selecione uma data válida.');
+                return;
+            }
             // Campo date: formato ISO completo (meia-noite UTC)
             const dateISO = new Date(`${ano}-${mes}-${dia}T00:00:00.000Z`).toISOString();
             // Campo time: string "HH:mm"
