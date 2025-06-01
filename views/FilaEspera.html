@@ -221,15 +221,13 @@
 
                     if (response.ok) {
                         const filaCriada = await response.json();
-                        // Salvar cliente atual para confirmação
+                        // Buscar fila atualizada e calcular posição dinamicamente
+                        const queue = await fetch(API_URL).then(res => res.json());
+                        const pos = queue.findIndex(c => c._id === filaCriada._id) + 1;
+                        // Salvar cliente atual para confirmação com posição real
                         localStorage.setItem('clienteAtual', JSON.stringify({
-                            _id: filaCriada._id,
-                            name: filaCriada.name,
-                            email: filaCriada.email,
-                            phone: filaCriada.phone,
-                            guests: filaCriada.guests,
-                            status: filaCriada.status,
-                            posicao: 1 // Pode ser atualizado se implementar lógica de posição
+                            ...filaCriada,
+                            posicao: pos
                         }));
                         window.location.href = 'filaConfirmada.html';
                     } else {
